@@ -6,6 +6,13 @@ from numpy.linalg import norm
 class KNN():
     """
     This class is designed to perform the k-nearest neighbor machine learning algorithm.
+    
+    On a basic level, the k-nearest neighbor machine learning algorithm takes a point and finds the most common label between its k-nearest neighbors and assigns that label to the point.
+    For example, if you have the points [[0, 0], [0, 1], [2, 0], [0, 3], [2, 3], [3, 2]] and the labels [1, 1, 0, 0, 0, 0] and you do k=3-nearest neighbor on the point [1, 1] the algorithm will do the following:
+    1) Find the three nearest neighbors of [1, 1] -- they are [0, 0], [0, 1], and [2, 0]
+    2) Get the labels for each of the three nearest neighbors -- they are 1, 1, and 0
+    3) Choose the most common label -- it is 1
+    4) Predict that [1, 1] is that label
 
     Attributes:
         k (int): The number of nearest neighbors to use in algorithm.
