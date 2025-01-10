@@ -19,7 +19,7 @@ Here are some of the machine learning algorithms that have been or will be imple
 
     Supervised Learning:
         K-Nearest Neighbors (KNN) - implemented
-        Linear Regression
+        Linear Regression - implemented
         Logistic Regression
         Decision Trees
         Random Forest
