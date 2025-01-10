@@ -57,22 +57,23 @@ cd custom-machine-learning
 Each algorithm is implemented in its own Python file. Here's an example of how to use the K-Nearest Neighbors (KNN) algorithm:
 Example: K-Nearest Neighbors (KNN)
 
-from knn.knn import KNN
+```
+from knn.knn import KNN\n\n
 
-Training data: (features, labels)
+# Get data and labels
 data = [[1, 2], [3, 4], [5, 6]]
 labels = [0, 1, 0]
+ 
+# Make and train model
+knn = KNN(k=3)
+knn.train(data, labels)
 
-Create a KNN model
-model = KNN(k=3)
-
-Train the model
-model.train(data, labels)
-
-Make a prediction
-point = [2, 3]
-prediction = model.predict(point)
+# Predict a point
+prediction_point = [2, 3]
+prediction = knn.predict(prediction_point)
 print(f"Predicted label: {prediction}")
+```
+> Predicted label: 0
 
 Each algorithm will come with similar instructions and examples on how to use it in your own projects.
 Contributing
