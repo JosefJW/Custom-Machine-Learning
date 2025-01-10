@@ -57,7 +57,7 @@ cd custom-machine-learning
 Each algorithm is implemented in its own Python file. Here's an example of how to use the K-Nearest Neighbors (KNN) algorithm:
 Example: K-Nearest Neighbors (KNN)
 
-```
+```python
 from knn.knn import KNN\n\n
 
 # Get data and labels
