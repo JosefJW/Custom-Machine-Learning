@@ -1,9 +1,8 @@
-Custom Machine Learning
+# Custom Machine Learning
 
 Welcome to the Custom Machine Learning repository! This project is an ongoing effort to implement machine learning algorithms from scratch in Python. The goal of this repository is to build various fundamental ML algorithms and showcase the underlying principles behind them. It’s designed for learning, experimentation, and improving understanding of how machine learning works at a low level.
-Table of Contents
 
-Overview
+# Overview
 
 This repository contains implementations of various machine learning algorithms, written from scratch without the use of high-level libraries like Scikit-learn or TensorFlow. The aim is to help learners, students, and developers gain a deeper understanding of how these algorithms work by exploring their core mechanics.
 Why Build ML Algorithms from Scratch?
@@ -14,12 +13,12 @@ Building machine learning models from scratch allows you to:
     Gain insights into algorithm design and optimization techniques.
     Strengthen your Python programming and problem-solving skills.
 
-Algorithms Implemented
+# Algorithms Implemented
 
 Here are some of the machine learning algorithms that have been or will be implemented in this repository:
 
     Supervised Learning:
-        K-Nearest Neighbors (KNN)
+        K-Nearest Neighbors (KNN) - implemented
         Linear Regression
         Logistic Regression
         Decision Trees
@@ -37,7 +36,7 @@ Here are some of the machine learning algorithms that have been or will be imple
         Gradient Descent
         Stochastic Gradient Descent (SGD)
 
-Getting Started
+# Getting Started
 
 To get started with using the algorithms in this repository, follow the steps below.
 Prerequisites
@@ -53,24 +52,24 @@ To clone this repository, run the following command in your terminal:
 git clone https://github.com/josefjw/custom-machine-learning.git
 cd custom-machine-learning
 
-Usage
+# Usage
 
 Each algorithm is implemented in its own Python file. Here's an example of how to use the K-Nearest Neighbors (KNN) algorithm:
 Example: K-Nearest Neighbors (KNN)
 
 from knn.knn import KNN
 
-# Training data: (features, labels)
+Training data: (features, labels)
 data = [[1, 2], [3, 4], [5, 6]]
 labels = [0, 1, 0]
 
-# Create a KNN model
+Create a KNN model
 model = KNN(k=3)
 
-# Train the model
+Train the model
 model.train(data, labels)
 
-# Make a prediction
+Make a prediction
 point = [2, 3]
 prediction = model.predict(point)
 print(f"Predicted label: {prediction}")
@@ -89,6 +88,6 @@ How to contribute:
     Push to the branch (git push origin feature-name).
     Open a pull request to merge your changes into the main branch.
 
-License
+# License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
