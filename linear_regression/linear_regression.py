@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import random
 
 class LinearRegression():
     """
@@ -37,18 +39,32 @@ class LinearRegression():
             An R^2 close to 0 means the model explains very little about the true value's variance.
             An R^2 close to 1 means the model explains the variance in y very well.
             R^2 = 1 - sum((y_true - y_pred)^2) / sum((y_true - y_mean)^2)
+            
+        visualize():
+            Generates a 2D or 3D linear regression graph based on the data
     
     Example:
         Example usage of the class:
         
         >>> X = [[1, 2], [3, 4], [5, 6]]
         >>> y = [0, 1, 0]
-        >>> LR = LinearRegression()
-        >>> B = LR.fit(X, y)
+        >>> lr = LinearRegression()
+        >>> B = lr.fit(X, y)
         >>> prediction_point = [2, 3]
-        >>> prediction = LR.predict(prediction_point)
+        >>> prediction = lr.predict(prediction_point)
         >>> print(f"Predicted value: {prediction[0]}")
         Predicted value: 0.333333333333324
+        
+        >>> X_2d = [[random.randint(1, 10)] for _ in range(5)]
+        >>> y_2d = [random.randint(1, 20) for _ in range(5)]
+        >>> lr = LinearRegression()
+        >>> lr.fit(X_2d, y_2d)
+        >>> lr.visualize(X_2d, y_2d, prediction_point=[random.randint(1, 10)])
+        >>> X_3d = np.array([[random.randint(1, 10), random.randint(1, 10)] for _ in range(5)])  # 5 rows, 2 columns of random numbers
+        >>> y_3d = [random.randint(1, 20) for _ in range(5)]  # List of 5 random numbers between 1 and 20
+        >>> lr.fit(X_3d, y_3d)
+        >>> lr.visualize(X_3d, y_3d, prediction_point=[random.randint(1, 10), random.randint(1, 10)])
+        Makes a 2D linear regression graph and then a 3D linear regression graph
     """
     
     
@@ -94,19 +110,21 @@ class LinearRegression():
         if self.B is None:
             raise ValueError("B values not calculated yet")
 
-        if isinstance(X[0], list):
+        print(isinstance(X[0], list))
+        print(X)
+        if isinstance(X[0], list) or isinstance(X[0], np.ndarray):
             predictions = []
             for i in range(len(X)):
                 y = self.B[0]
                 for j in range(len(X[i])):
                     y += X[i][j] * self.B[j+1]
                 predictions.append(y)
-            return predictions
+            return np.array(predictions)
         else:
             y = self.B[0]
             for i in range(len(X)):
                 y += X[i]*self.B[i+1]
-            return [y]
+            return np.array([y])
     
     def compute_loss(self, y_true, y_pred):
         """
@@ -149,3 +167,77 @@ class LinearRegression():
         mean = sum(y_true)/len(y_true)
         R2 = 1 - sum((yt-yp)**2 for yt, yp in zip(y_true, y_pred)) / sum((yt-mean)**2 for yt in y_true)
         return R2
+    
+    def visualize(self, X, y, prediction_point=None):
+        """
+        Visualizes the training data and the regression model in 2D or 3D.
+
+        Args:
+            X (list or np.ndarray): Training input data (2D list or array).
+            y (list or np.ndarray): Target output data.
+            prediction_point (list, optional): A point to make a prediction on, if provided.
+        """
+        if len(X[0]) == 1: #2D graph
+            plt.figure(figsize=(8, 6))
+
+            # Plot the training data
+            plt.scatter(X, y, color='blue', label='Training Data', zorder=5)
+
+            # Fit the model
+            self.fit(X, y)
+
+            # Make predictions over a range of x values for plotting the regression line
+            x_range = np.linspace(min([x[0] for x in X]) - 1, max([x[0] for x in X]) + 1, 100).reshape(-1, 1)  # Extract the first element of each sublist
+            y_pred = self.predict(x_range)
+
+            # Plot the regression line
+            plt.plot(x_range, y_pred, color='red', label='Regression Line', zorder=10)
+
+            # If a prediction point is provided, predict its value and plot it
+            if prediction_point:
+                prediction = self.predict([prediction_point])
+                plt.scatter(prediction_point[0], prediction[0], color='green', s=100, label='Prediction Point', zorder=15)
+
+            # Customize plot
+            plt.xlabel('X')
+            plt.ylabel('y')
+            plt.title('2D Linear Regression Visualization')
+            plt.legend()
+            plt.grid(True)
+            plt.show()
+        
+        elif len(X[0]) == 2: # 3D graph
+            from mpl_toolkits.mplot3d import Axes3D
+
+            plt.figure(figsize=(10, 8))
+            ax = plt.axes(projection='3d')
+
+            # Plot the training data
+            ax.scatter(X[:, 0], X[:, 1], y, color='blue', label='Training Data')
+
+            # Fit the model
+            self.fit(X, y)
+
+            # Create a meshgrid to visualize the regression plane
+            x_range = np.linspace(min(X[:, 0]) - 1, max(X[:, 0]) + 1, 100)  # Extend beyond the min and max for x
+            y_range = np.linspace(min(X[:, 1]) - 1, max(X[:, 1]) + 1, 100)  # Extend beyond the min and max for y
+            X_range, Y_range = np.meshgrid(x_range, y_range)
+            Z_range = self.predict(np.c_[X_range.ravel(), Y_range.ravel()]).reshape(X_range.shape)
+
+            # Plot the regression plane
+            ax.plot_surface(X_range, Y_range, Z_range, color='red', alpha=0.5)
+
+            # If a prediction point is provided, predict its value and plot it
+            if prediction_point:
+                prediction = self.predict([prediction_point])
+                ax.scatter(prediction_point[0], prediction_point[1], prediction[0], color='green', s=100, label='Prediction Point')
+
+            # Customize plot
+            ax.set_xlabel('X1')
+            ax.set_ylabel('X2')
+            ax.set_zlabel('y')
+            ax.set_title('Linear Regression Visualization in 3D')
+            ax.legend()
+            plt.show()
+        else:
+            print("Visualization supports only 1D and 2D input vectors.")

@@ -1,4 +1,5 @@
 import math
+import matplotlib.pyplot as plt
 from collections import Counter
 from numpy import dot
 from numpy.linalg import norm
@@ -23,6 +24,7 @@ class KNN():
         predict: Predict what class point is based on training data
         weighted_predict: Predict what class point is based on training data using the inverse of the distance as a weight
         confidence_predict: Gives confidence values for classes that point could be
+        visualize: Make a graph showing the KNN model
         
     Example:
         Example usage of the class:
@@ -35,6 +37,16 @@ class KNN():
         >>> prediction = knn.predict(prediction_point)
         >>> print(f"Predicted label: {prediction}")
         Predicted label: 0
+        
+        >>> import random
+        >>> data = [
+        >>>     [random.randint(1, 500000), random.randint(1, 500000)] for _ in range(100)
+        >>> ]
+        >>> labels = [random.randint(0, 10) for _ in range(100)]
+        >>> knn = KNN(k=30)
+        >>> knn.train(data, labels)
+        >>> knn.visualize([random.randint(1, 500000), random.randint(1, 500000)], distance_type="Euclidean")
+        Shows a visualization of 30NN
         
     """
     
@@ -219,3 +231,51 @@ class KNN():
         counter = Counter(labels)
         confidence_values = {label: count / self.k for label, count in counter.items()}
         return confidence_values
+    
+    def visualize(self, point, distance_type="Euclidean"):
+        """
+        Visualizes the training data, the query point, its predicted label,
+        and the k nearest neighbors with lines drawn to them.
+        
+        Args:
+            point (list): Coordinates of the query point for prediction
+            distance_type (str, optional): Type of distance measurement to use. Defaults to "Euclidean".
+        """
+        # Perform prediction for the given point
+        predicted_label = self.predict(point, distance_type)
+        
+        # Calculate distances and find k nearest neighbors
+        distances = [(self.calculate_distance(point, datapoint, distance_type), label, datapoint) 
+                    for datapoint, label in zip(self.data, self.labels)]
+        distances.sort(key=lambda x: x[0])  # Sort by distance
+        nearest_neighbors = distances[:self.k]  # Take the k nearest neighbors
+        
+        # Plot training data points
+        plt.figure(figsize=(8, 6))
+        scatter = plt.scatter(
+            [x[0] for x in self.data],  # x coordinates of training data
+            [x[1] for x in self.data],  # y coordinates of training data
+            c=self.labels,  # Color points based on their labels
+            cmap=plt.cm.Paired,
+            s=100,
+            marker='o'
+        )
+        
+        # Add color legend for labels
+        plt.legend(handles=scatter.legend_elements()[0], labels=set(self.labels), title="Classes")
+        
+        # Plot the query point
+        plt.scatter(point[0], point[1], color='black', s=100, label="Query Point", edgecolor='white', marker='X')
+        
+        # Draw lines from query point to its k nearest neighbors
+        for _, _, neighbor in nearest_neighbors:
+            plt.plot([point[0], neighbor[0]], [point[1], neighbor[1]], color='gray', linestyle='dashdot', alpha=0.3)
+        
+        # Display the predicted label
+        plt.title(f"{self.k}NN Prediction: {predicted_label}")
+        
+        # Show plot
+        plt.xlabel("X Coordinate")
+        plt.ylabel("Y Coordinate")
+        plt.grid(True)
+        plt.show()
