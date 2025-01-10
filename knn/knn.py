@@ -4,6 +4,33 @@ from numpy import dot
 from numpy.linalg import norm
 
 class KNN():
+    """
+    This class is designed to perform the k-nearest neighbor machine learning algorithm.
+
+    Attributes:
+        k (int): The number of nearest neighbors to use in algorithm.
+    
+    Methods:
+        train: Collect data to compare with when making predictions.
+        calculate_distance: Calculate the distance between two points
+        predict: Predict what class point is based on training data
+        weighted_predict: Predict what class point is based on training data using the inverse of the distance as a weight
+        confidence_predict: Gives confidence values for classes that point could be
+        
+    Example:
+        Example usage of the class:
+        
+        >>> data = [[1, 2], [3, 4], [5, 6]]
+        >>> labels = [0, 1, 0]
+        >>> knn = KNN(k=3)
+        >>> knn.train(data, labels)
+        >>> prediction_point = [2, 3]
+        >>> prediction = knn.predict(prediction_point)
+        >>> print(f"Predicted label: {prediction}")
+        Predicted label: 0
+        
+    """
+    
     def __init__(self, k=1):
         """
         Initialize a k-nearest neighbor machine learning object
